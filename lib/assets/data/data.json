@@ -1,0 +1,17 @@
+[
+    {
+        "Identificacion": "Marrana pinta",
+        "Raza": "Pietran",
+        "Peso": "90 Kg",
+        "Crias": "2",
+        "InicioCalor": "2024-10-20"
+    },
+    {
+        "Identificacion": "Marrana colorada",
+        "Raza": "Duroc",
+        "Peso": "120 Kg",
+        "Crias": "3",
+        "InicioCalor": "2024-10-16"
+    }
+
+]

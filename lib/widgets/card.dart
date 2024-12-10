@@ -3,9 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:porquiad/services/notifications.dart';
 import 'package:porquiad/assets/classes/info.dart';
-import 'package:workmanager/workmanager.dart';
 
 class CardInfoCria extends StatefulWidget {
   const CardInfoCria({super.key});
@@ -18,22 +16,12 @@ List<CriaData> criaDataList = [];
 List<TextEditingController> _controllers = [];
 List<Widget> _campoAdicionales = [];
 
-void _showNotification(String body) {
-  NotificationService()
-      .showNotification(id: 0, title: 'PROXIMA A ENTRAR EN CALOR', body: body);
-}
 
 String formatearFecha(DateTime fecha) {
   return '${fecha.day.toString().padLeft(2, '0')}/${fecha.month.toString().padLeft(2, '0')}/${fecha.year}';
 }
 
 // Calcula la diferencia de días entre la fecha de fertilización y la fecha actual
-int calcularDiasRestantes(DateTime fechaFertilizacion) {
-  final DateTime fechaActual = DateTime.now();
-  final Duration diferencia = fechaFertilizacion.difference(fechaActual);
-
-  return diferencia.inDays; // Obtiene los días restantes
-}
 
 class _CardInfoCriaState extends State<CardInfoCria> {
   String fechaAct = '';
@@ -67,13 +55,6 @@ class _CardInfoCriaState extends State<CardInfoCria> {
     } catch (e) {
       print("Error al guardar los datos $e");
     }
-  }
-
-  void programarSegundoPlano(){
-    Workmanager().registerPeriodicTask(
-      "CheckFertilizacion", 
-      "VerificarDias",
-      frequency: const Duration(hours: 23));
   }
 
   @override
@@ -134,20 +115,7 @@ class _CardInfoCriaState extends State<CardInfoCria> {
             itemCount: criaDataList.length,
             itemBuilder: (BuildContext context, int index) {
               final cria = criaDataList[index];
-              DateTime proximaFertilizacion = cria.calcularFecha(dias: 21);
-              int diasRestantes = calcularDiasRestantes(proximaFertilizacion);
-              print(diasRestantes);
-
-              void callBackDispatcher() {
-                Workmanager().executeTask((task, inputData) {
-                  if (diasRestantes <= 7 && diasRestantes >= 2) {
-                    _showNotification(
-                        '${cria.identificacion} está a $diasRestantes días de fertilización');
-                  }
-                  return Future.value(true);
-                });
-              }
-
+              
               return Card(
                 color: const Color.fromARGB(255, 255, 255, 255),
                 shape: RoundedRectangleBorder(
@@ -204,7 +172,7 @@ class _CardInfoCriaState extends State<CardInfoCria> {
                                 fontSize: 12, fontFamily: 'Raleway_Light'),
                           ),
                           Text(
-                            formatearFecha(proximaFertilizacion),
+                            formatearFecha(cria.calcularFecha(dias: 21)),
                             style: const TextStyle(
                                 color: Color.fromARGB(255, 255, 0, 0),
                                 fontFamily: 'Raleway'),
@@ -217,18 +185,16 @@ class _CardInfoCriaState extends State<CardInfoCria> {
                         children: [
                           OutlinedButton(
                               onPressed: () {
-                                DateTime nuevaFecha = proximaFertilizacion;
+                                DateTime nuevaFecha = cria.calcularFecha(dias: 21);
                                 actualizarDatos(cria, nuevaFecha);
 
-                                DateTime nuevaProximaFertilizacion =
-                                    cria.calcularFecha(dias: 21);
-                                print(
-                                    'nuevaProximaFertilizacion ${nuevaProximaFertilizacion}');
-
-                                setState(() {
-                                  _campoAdicionales.removeAt(index - 1);
-                                  _controllers.removeAt(index - 1);
-                                });
+                                
+                                if (_campoAdicionales.isNotEmpty) {
+                                  setState(() {
+                                    _campoAdicionales.removeAt(index - 1);
+                                    _controllers.removeAt(index - 1);
+                                  });
+                                }
                               },
                               style: OutlinedButton.styleFrom(
                                   padding: const EdgeInsets.all(1),

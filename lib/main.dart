@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:porquiad/widgets/card.dart';
 import 'package:porquiad/services/notifications.dart';
 
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService().init();
+  await NotificationService().initializeService();
   runApp(const MyApp());
 }
 
@@ -18,7 +21,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-     
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(

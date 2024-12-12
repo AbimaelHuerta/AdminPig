@@ -5,6 +5,29 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:porquiad/assets/classes/info.dart';
 
+@pragma('vm:entry-point')
+void onStart(ServiceInstance service) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (service is AndroidServiceInstance) {
+    service.on('setAsForeground').listen((event) {
+      service.setAsForegroundService();
+    });
+
+    service.on('setAsBackground').listen((event) {
+      service.setAsBackgroundService();
+    });
+  }
+  service.on('stopService').listen((event) {
+    service.stopSelf();
+  });
+
+  Timer.periodic(const Duration(seconds: 5), (timer) async {
+    List<CriaData> crias = await CriaData.cargarData();
+    NotificationService().verificarFertilizacion(crias);
+    print('verificando fertilizacion');
+  });
+}
+
 class NotificationService {
   // Singleton para el servicio de notificaciones
   static final NotificationService _notificationService =
@@ -99,27 +122,5 @@ class NotificationService {
   Future<bool> onIosBackground(ServiceInstance service) async {
     WidgetsFlutterBinding.ensureInitialized();
     return true;
-  }
-
-  @pragma('vm:entry-point')
-  void onStart(ServiceInstance service) async {
-    WidgetsFlutterBinding.ensureInitialized();
-    if (service is AndroidServiceInstance) {
-      service.on('setAsForeground').listen((event) {
-        service.setAsForegroundService();
-      });
-
-      service.on('setAsBackground').listen((event) {
-        service.setAsBackgroundService();
-      });
-    }
-    service.on('stopService').listen((event) {
-      service.stopSelf();
-    });
-
-    Timer.periodic(const Duration(seconds: 10), (timer) async {
-      List<CriaData> crias = await CriaData.cargarData();
-      verificarFertilizacion(crias);
-    });
   }
 }

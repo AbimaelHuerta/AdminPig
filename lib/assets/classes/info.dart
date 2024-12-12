@@ -52,19 +52,17 @@ class CriaData {
       if (await file.exists()) {
         final jsonString = await file.readAsString();
         final List<dynamic> jsonData = jsonDecode(jsonString);
-        print('si existe en el local');
         return jsonData.map((json) => CriaData.fromJson(json)).toList();
         
       } else {
         final jsonString =
             await rootBundle.loadString('lib/assets/data/data.json');
         final List<dynamic> jsonData = jsonDecode(jsonString);
-                print('se cargan los datos mientras el assets de flutter');
 
         return jsonData.map((json) => CriaData.fromJson(json)).toList();
       }
     } catch (e) {
-      print("Error al cargar los datos $e");
+      // print("Error al cargar los datos $e");
       return [];
     }
 

@@ -51,9 +51,9 @@ class _CardInfoCriaState extends State<CardInfoCria> {
       await file.parent.create(recursive: true);
       await file.writeAsString(jsonEncode(jsonData));
 
-      print("Datos actualizados y guardados ");
+      // print("Datos actualizados y guardados ");
     } catch (e) {
-      print("Error al guardar los datos $e");
+      // print("Error al guardar los datos $e");
     }
   }
 

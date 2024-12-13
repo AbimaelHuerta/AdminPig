@@ -16,7 +16,6 @@ List<CriaData> criaDataList = [];
 List<TextEditingController> _controllers = [];
 List<Widget> _campoAdicionales = [];
 
-
 String formatearFecha(DateTime fecha) {
   return '${fecha.day.toString().padLeft(2, '0')}/${fecha.month.toString().padLeft(2, '0')}/${fecha.year}';
 }
@@ -115,7 +114,7 @@ class _CardInfoCriaState extends State<CardInfoCria> {
             itemCount: criaDataList.length,
             itemBuilder: (BuildContext context, int index) {
               final cria = criaDataList[index];
-              
+
               return Card(
                 color: const Color.fromARGB(255, 255, 255, 255),
                 shape: RoundedRectangleBorder(
@@ -185,14 +184,14 @@ class _CardInfoCriaState extends State<CardInfoCria> {
                         children: [
                           OutlinedButton(
                               onPressed: () {
-                                DateTime nuevaFecha = cria.calcularFecha(dias: 21);
+                                DateTime nuevaFecha =
+                                    cria.calcularFecha(dias: 21);
                                 actualizarDatos(cria, nuevaFecha);
 
-                                
                                 if (_campoAdicionales.isNotEmpty) {
                                   setState(() {
-                                    _campoAdicionales.removeAt(index - 1);
-                                    _controllers.removeAt(index - 1);
+                                    _campoAdicionales.removeAt(index);
+                                    _controllers.removeAt(index);
                                   });
                                 }
                               },

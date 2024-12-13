@@ -24,7 +24,7 @@ void onStart(ServiceInstance service) async {
   Timer.periodic(const Duration(seconds: 5), (timer) async {
     List<CriaData> crias = await CriaData.cargarData();
     NotificationService().verificarFertilizacion(crias);
-    print('verificando fertilizacion');
+    // print('verificando fertilizacion');
   });
 }
 
@@ -85,7 +85,7 @@ class NotificationService {
 
       int diasRestantes =
           NotificationService().calcularDiasRestantes(proximaFertilizacion);
-      print(diasRestantes);
+      // print(diasRestantes);
 
       if (diasRestantes <= 7 && diasRestantes >= 2) {
         _showNotification(
